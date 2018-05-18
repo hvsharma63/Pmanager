@@ -49,6 +49,10 @@ class CompaniesController extends Controller
     public function show(Company $company)
     {
         //
+        //$company = Company::where('id', $company->id)->first();
+        //Another way to write the same above query in below query
+        $company = Company::find($company->id);
+        return view('companies.show', [ 'company' => $company ]);
     }
 
     /**
@@ -60,6 +64,8 @@ class CompaniesController extends Controller
     public function edit(Company $company)
     {
         //
+        $company = Company::find($company->id);
+        return view('companies.edit', [ 'company' => $company ]);
     }
 
     /**
@@ -72,6 +78,16 @@ class CompaniesController extends Controller
     public function update(Request $request, Company $company)
     {
         //
+        $companyUpdate = Company::where('id', $company->id)->update(['name'=>$request->input('name'),
+        'description'=>$request->input('description')]);
+
+        if($companyUpdate){
+            return redirect()->route('companies.show', ['company'=>$company->id])
+            ->with('success','Company Data Updata Successfully');
+        }
+        else{
+            return back()->withInput();
+        }
     }
 
     /**
@@ -83,5 +99,11 @@ class CompaniesController extends Controller
     public function destroy(Company $company)
     {
         //
+        $findCompany = Company::find($company->id);
+        if($findCompany->delete()){
+            return redirect()->route('companies.index')->with('success',"Company Deleted Successfully");
+        }
+
+        return back()->withInput()->with('error','Company could not be deleted');
     }
 }

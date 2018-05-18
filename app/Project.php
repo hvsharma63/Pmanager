@@ -15,8 +15,8 @@ class Project extends Model
         'days',
     ];
 
-    public function comapany(){
-        return $this->belongsTo('App\Comapany');
+    public function company(){
+        return $this->belongsTo('App\Company');
     }
 
     public function user(){
